@@ -130,7 +130,7 @@ RUN chmod a+x /root/update_config.sh
 RUN mkdir -p /var/spool/cron/crontabs
 
 # Add the cron job
-RUN crontab -l | { cat; echo "* * * * * bash /root/update_config.sh"; } | crontab -
+RUN crontab -l | { cat; echo "* * * * * sh /root/update_config.sh"; } | crontab -
 
 # Run the command on container startup
 CMD cron
