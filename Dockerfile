@@ -121,20 +121,5 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD ipfs dag stat /ipfs/QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn || exit 1
 
 
-# Add the script to the Docker Image
-COPY update_config.sh /root/update_config.sh
-
-# Give execution rights on the cron scripts
-RUN chmod a+x /root/update_config.sh
-
-RUN mkdir -p /var/spool/cron/crontabs
-
-# Add the cron job
-RUN crontab -l | { cat; echo "* * * * * sh /root/update_config.sh"; } | crontab -
-
-# Run the command on container startup
-CMD cron
-
-
 # Execute the daemon subcommand by default
 CMD ["daemon", "--migrate=true", "--agent-version-suffix=docker"]
