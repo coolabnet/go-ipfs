@@ -6,6 +6,10 @@
 [![GoDoc](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=flat-square&cacheSeconds=3600)](https://godoc.org/github.com/ipfs/go-ipfs)
 [![CircleCI](https://img.shields.io/circleci/build/github/ipfs/go-ipfs?style=flat-square&cacheSeconds=3600)](https://circleci.com/gh/ipfs/go-ipfs)
 
+## Balena - local network fork
+
+This is a fork meant to allow IPFS to run on Balena and be accessible on local networks
+
 ## What is IPFS?
 
 IPFS is a global, versioned, peer-to-peer filesystem. It combines good ideas from previous systems such as Git, BitTorrent, Kademlia, SFS, and the Web. It is like a single BitTorrent swarm, exchanging git objects. IPFS provides an interface as simple as the HTTP web, but with permanence built-in. You can also mount the world at /ipfs.
@@ -19,7 +23,7 @@ Before opening an issue, consider using one of the following locations to ensure
   - Exploration of new ideas in [ipfs/notes issues](https://github.com/ipfs/notes/issues).
   - Ask questions and meet the rest of the community at the [IPFS Forum](https://discuss.ipfs.io).
   - Or [chat with us](https://docs.ipfs.io/community/chat/).
- 
+
 [![YouTube Channel Subscribers](https://img.shields.io/youtube/channel/subscribers/UCdjsUXJ3QawK4O5L1kqqsew?label=Subscribe%20IPFS&style=social&cacheSeconds=3600)](https://www.youtube.com/channel/UCdjsUXJ3QawK4O5L1kqqsew) [![Follow @IPFS on Twitter](https://img.shields.io/twitter/follow/IPFS?style=social&cacheSeconds=3600)](https://twitter.com/IPFS)
 
 ## Next milestones
