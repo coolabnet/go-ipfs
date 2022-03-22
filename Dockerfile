@@ -6,7 +6,8 @@ LABEL maintainer="Steven Allen <steven@stebalien.com>"
 RUN apt-get update && apt-get install -y \
   libssl-dev \
   ca-certificates \
-  fuse
+  fuse \
+  jq cron
 
 ENV SRC_DIR /go-ipfs
 
@@ -58,6 +59,7 @@ COPY --from=0 /tmp/su-exec/su-exec-static /sbin/su-exec
 COPY --from=0 /tmp/tini /sbin/tini
 COPY --from=0 /bin/fusermount /usr/local/bin/fusermount
 COPY --from=0 /etc/ssl/certs /etc/ssl/certs
+COPY --from=0 /usr/bin/jq /usr/local/bin/jq
 
 # Add suid bit on fusermount so it will run properly
 RUN chmod 4755 /usr/local/bin/fusermount
@@ -71,6 +73,13 @@ COPY --from=0 /lib/*-linux-gnu*/libdl.so.2 /lib/
 # Copy over SSL libraries.
 COPY --from=0 /usr/lib/*-linux-gnu*/libssl.so* /usr/lib/
 COPY --from=0 /usr/lib/*-linux-gnu*/libcrypto.so* /usr/lib/
+
+# Copy jq library
+COPY --from=0 /usr/lib/*-linux-gnu*/libjq.so* /usr/lib/
+COPY --from=0 /usr/lib/*-linux-gnu*/libonig.so* /usr/lib/
+COPY --from=0 /usr/lib/*-linux-gnu*/libc.so* /usr/lib/
+COPY --from=0 /usr/lib/*-linux-gnu*/libm.so* /usr/lib/
+
 
 # Swarm TCP; should be exposed to the public
 EXPOSE 4001
@@ -109,7 +118,23 @@ ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/start_ipfs"]
 # Heathcheck for the container
 # QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn is the CID of empty folder
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD ipfs dag stat /ipfs/QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn || exit 1 
+  CMD ipfs dag stat /ipfs/QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn || exit 1
+
+
+# Add the script to the Docker Image
+COPY update_config.sh /root/update_config.sh
+
+# Give execution rights on the cron scripts
+RUN chmod a+x /root/update_config.sh
+
+RUN mkdir -p /var/spool/cron/crontabs
+
+# Add the cron job
+RUN crontab -l | { cat; echo "* * * * * bash /root/update_config.sh"; } | crontab -
+
+# Run the command on container startup
+CMD cron
+
 
 # Execute the daemon subcommand by default
 CMD ["daemon", "--migrate=true", "--agent-version-suffix=docker"]
