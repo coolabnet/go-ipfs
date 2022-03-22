@@ -3,7 +3,7 @@
 IP=$(wget -qO- "$BALENA_SUPERVISOR_ADDRESS/v1/device?apikey=$BALENA_SUPERVISOR_API_KEY"| jq -r .ip_address)
 
 # if it is not already configured
-if ! ipfs config API.HTTPHeaders.Access-Control-Allow-Origin| grep -q "$IP";
+if ! ipfs config API.HTTPHeaders| grep -q "Access-Control-Allow-Origin";
 then
   NAME=$(wget -qO- "$BALENA_SUPERVISOR_ADDRESS/v1/device/host-config?apikey=$BALENA_SUPERVISOR_API_KEY"| jq -r .network.hostname)
   echo "configuring..."
